@@ -21,14 +21,15 @@ def find_company_details(s):
     return result.group(1)
 
 
-def send_email(details):
-    message = Mail(
-        from_email='pe.messh@gmail.com',
-        to_emails='qesrvhgk@cutradition.com',
-        subject=f'IPO Listing: {details.symbol} - {details.company_name}',
-        html_content='''
+def send_email(symbol, company_name):
+    message = Mail(from_email='bajracharyapramesh99@gmail.com',
+                   to_emails='pe.messh@gmail.com',
+                   subject=f'IPO Listing: {symbol} - {company_name}',
+                   html_content=f'''
             <strong>
-                {details.symbol} - {details.company_name} will be listed on NEPSE today. <br> 
+                Symbol: {symbol} <br>
+                Company Name: {company_name} <br>
+                will be listed on NEPSE today. <br> 
                 Make sure to place order at 11 AM today.
                 <br><br><br>
                 Find more on : <a href='https://www.sharesansar.com/existing-issues'>Existing Issues</a>
@@ -52,13 +53,9 @@ def main():
         company_name = find_company_details(company_details['companyname'])
         status = row['status']
         listing_date = row['listing_date']
-        print(status, date.today(), listing_date)
         if (status == 1 and listing_date == str(date.today())):
             print(company_symbol, company_name, listing_date)
-            send_email({
-                'company_name': company_name,
-                'symbol': company_symbol
-            })
+            send_email(symbol=company_symbol, company_name=company_name)
 
 
 main()
