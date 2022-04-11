@@ -45,7 +45,8 @@ def send_email(symbol, company_name):
         print(e)
 
 
-def main():
+def lambda_handler(event, context):
+    print(event)
     data = get_data_from_source()
     for row in data['data']:
         company_details = row['company']
@@ -56,6 +57,3 @@ def main():
         if (status == 1 and listing_date == str(date.today())):
             print(company_symbol, company_name, listing_date)
             send_email(symbol=company_symbol, company_name=company_name)
-
-
-main()
