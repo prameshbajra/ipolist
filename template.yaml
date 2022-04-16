@@ -17,5 +17,5 @@ Resources:
         ScheduledEvent:
           Type: Schedule
           Properties:
-            Schedule: rate(10 minutes)
+            Schedule: rate(12 hours)
             Enabled: True 

@@ -3,6 +3,7 @@ import json
 import traceback
 import boto3
 import requests
+from datetime import date
 
 SES_CLIENT = boto3.client('ses')
 
@@ -65,7 +66,7 @@ def lambda_handler(event, context):
         status = row['status']
         listing_date = row['listing_date']
         print(company_name, company_symbol, listing_date, status)
-        send_email(symbol=company_symbol, company_name=company_name)
-        break
-        # if (status == 1 and listing_date == str(date.today())):
-        #     send_email(symbol=company_symbol, company_name=company_name)
+        if (status == 1 and listing_date == str(date.today())):
+            print("LISTING : ", company_name, company_symbol, listing_date,
+                  status)
+            send_email(symbol=company_symbol, company_name=company_name)
