@@ -10,12 +10,12 @@ Resources:
       CodeUri: src/listing/
       Handler: main.lambda_handler
       Runtime: python3.8
-      Environment:
-        Variables:
-          SENDGRID_API_KEY: '{{resolve:secretsmanager:SENDGRID_API_KEY}}'
+      Policies:
+        - SESCrudPolicy:
+            IdentityName: '*'
       Events:
         ScheduledEvent:
           Type: Schedule
           Properties:
-            Schedule: rate(15 minutes)
+            Schedule: rate(10 minutes)
             Enabled: True 

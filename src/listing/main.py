@@ -1,10 +1,10 @@
 import re
-import os
 import json
+import traceback
+import boto3
 import requests
-from datetime import date
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+
+SES_CLIENT = boto3.client('ses')
 
 
 def get_data_from_source():
@@ -21,28 +21,39 @@ def find_company_details(s):
 
 
 def send_email(symbol, company_name):
-    message = Mail(from_email='bajracharyapramesh99@gmail.com',
-                   to_emails='pe.messh@gmail.com',
-                   subject=f'IPO Listing: {symbol} - {company_name}',
-                   html_content=f'''
-            <strong>
-                Symbol: {symbol} <br>
-                Company Name: {company_name} <br>
-                will be listed on NEPSE today. <br> 
-                Make sure to place order at 11 AM today.
-                <br><br><br>
-                Find more on : <a href='https://www.sharesansar.com/existing-issues'>Existing Issues</a>
-            </strong>
-        ''')
     try:
-        print("USING API KEY : ", os.environ.get('SENDGRID_API_KEY'))
-        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-        response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
+        response = SES_CLIENT.send_email(
+            Destination={'ToAddresses': ['pe.messh@gmail.com']},
+            Message={
+                'Body': {
+                    'Html': {
+                        'Charset':
+                        'UTF-8',
+                        'Data':
+                        f'''
+                        <html>
+                            <strong>
+                                Symbol: {symbol} <br>
+                                Company Name: {company_name} <br>
+                                will be listed on NEPSE today. <br> <br> 
+                                Make sure to place order at 11 AM.
+                                <br><br><br>
+                                Find more on : <a href='https://www.sharesansar.com/existing-issues'>Existing Issues</a>
+                            </strong>
+                        </html>
+                        ''',
+                    },
+                },
+                'Subject': {
+                    'Charset': 'UTF-8',
+                    'Data': f'IPO Listing: {symbol} - {company_name}',
+                },
+            },
+            Source='bajracharyapramesh99@gmail.com',
+        )
+        print(response)
     except Exception as e:
-        print(e)
+        traceback.format_exc()
 
 
 def lambda_handler(event, context):
