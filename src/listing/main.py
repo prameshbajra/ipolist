@@ -5,7 +5,6 @@ import requests
 from datetime import date
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from sympy import symbols
 
 
 def get_data_from_source():
@@ -36,6 +35,7 @@ def send_email(symbol, company_name):
             </strong>
         ''')
     try:
+        print("USING API KEY : ", os.environ.get('SENDGRID_API_KEY'))
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
         response = sg.send(message)
         print(response.status_code)
@@ -46,7 +46,6 @@ def send_email(symbol, company_name):
 
 
 def lambda_handler(event, context):
-    print(event)
     data = get_data_from_source()
     for row in data['data']:
         company_details = row['company']
@@ -54,6 +53,8 @@ def lambda_handler(event, context):
         company_name = find_company_details(company_details['companyname'])
         status = row['status']
         listing_date = row['listing_date']
-        if (status == 1 and listing_date == str(date.today())):
-            print(company_symbol, company_name, listing_date)
-            send_email(symbol=company_symbol, company_name=company_name)
+        print(company_name, company_symbol, listing_date, status)
+        send_email(symbol=company_symbol, company_name=company_name)
+        break
+        # if (status == 1 and listing_date == str(date.today())):
+        #     send_email(symbol=company_symbol, company_name=company_name)

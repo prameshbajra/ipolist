@@ -1,3 +1,4 @@
 sendgrid.env
 *pycache*
-*aws_sam*
+*aws-sam*
+*.toml

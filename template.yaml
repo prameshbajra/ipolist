@@ -7,11 +7,15 @@ Resources:
     Properties:
       Architectures:
         - arm64
+      CodeUri: src/listing/
       Handler: main.lambda_handler
       Runtime: python3.8
+      Environment:
+        Variables:
+          SENDGRID_API_KEY: '{{resolve:secretsmanager:SENDGRID_API_KEY}}'
       Events:
         ScheduledEvent:
           Type: Schedule
           Properties:
-            Schedule: cron(5 * * * ? *)
+            Schedule: rate(15 minutes)
             Enabled: True 
