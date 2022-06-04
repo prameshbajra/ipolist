@@ -19,3 +19,21 @@ Resources:
           Properties:
             Schedule: rate(12 hours)
             Enabled: True 
+  
+  IPOOpeningFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures:
+        - arm64
+      CodeUri: src/opening/
+      Handler: main.lambda_handler
+      Runtime: python3.8
+      Policies:
+        - SESCrudPolicy:
+            IdentityName: '*'
+      Events:
+        ScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule: rate(12 hours)
+            Enabled: True

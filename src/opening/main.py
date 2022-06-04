@@ -7,7 +7,7 @@ import requests
 from datetime import date
 
 SES_CLIENT = boto3.client('ses')
-EMAILS_TO_SEND = os.environ.get("emails_to_send", [])
+EMAILS_TO_SEND = os.environ.get('emails_to_send', '')
 
 
 def get_data_from_source():
@@ -42,10 +42,10 @@ def send_email(symbol, company_name):
                             <strong>
                                 Symbol: {symbol} <br>
                                 Company Name: {company_name} <br>
-                                will be listed on NEPSE today. <br> <br> 
-                                Make sure to place order at 11 AM.
+                                will available for IPO today. <br> <br> 
+                                You can apply for it from your Mero Share account.
                                 <br><br><br>
-                                Find more on : <a href='https://www.sharesansar.com/existing-issues'>Existing Issues</a>
+                                Find more on : <a href='https://www.sharesansar.com/existing-issues'>IPO Details</a>
                             </strong>
                         </html>
                         ''',
@@ -53,7 +53,7 @@ def send_email(symbol, company_name):
                 },
                 'Subject': {
                     'Charset': 'UTF-8',
-                    'Data': f'IPO Listing: {symbol} - {company_name}',
+                    'Data': f'IPO Opens Today: {symbol} - {company_name}',
                 },
             },
             Source='bajracharyapramesh99@gmail.com',
@@ -70,9 +70,9 @@ def lambda_handler(event, context):
         company_symbol = find_company_details(company_details['symbol'])
         company_name = find_company_details(company_details['companyname'])
         status = row['status']
-        listing_date = row['listing_date']
-        print(company_name, company_symbol, listing_date, status)
-        if (status == 1 and listing_date == str(date.today())):
-            print("IPO LISTING : ", company_name, company_symbol, listing_date,
+        opening_date = row['opening_date']
+        print(company_name, company_symbol, opening_date, status)
+        if (status == 0 and opening_date == str(date.today())):
+            print("IPO OPEN : ", company_name, company_symbol, opening_date,
                   status)
             send_email(symbol=company_symbol, company_name=company_name)
