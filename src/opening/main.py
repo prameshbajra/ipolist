@@ -30,7 +30,11 @@ def send_email(symbol, company_name):
         if len(emails) == 0:
             return False
         response = SES_CLIENT.send_email(
-            Destination={'ToAddresses': emails},
+            Destination={
+                'ToAddresses': ['pe.messh@gmail.com'],
+                'BccAddresses': emails
+            },
+            ReplyToAddresses=['pe.messh@gmail.com'],
             Message={
                 'Body': {
                     'Html': {
