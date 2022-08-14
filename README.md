@@ -1,5 +1,9 @@
 # ipolist
 
+Activate the virtual env:
+```
+conda activate <nameofvenv>
+```
 
 For deploying:
 
