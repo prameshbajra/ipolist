@@ -22,4 +22,6 @@ export emails_to_send='yccgpzaixr@scpulse.com,gthbpahyukbtns@knowledgemd.com,vyo
 
 # Call function
 python tests/listing.py
+
+# If needed create new tests accodringly.
 ```
